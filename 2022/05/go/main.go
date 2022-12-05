@@ -38,6 +38,7 @@ func addCrates(stacksPtr *[][]string, l string) bool {
 
 	return false
 }
+
 func pop(stack *[]string) string {
 	l := len(*stack)
 	last := (*stack)[l-1]
@@ -45,17 +46,16 @@ func pop(stack *[]string) string {
 	return last
 }
 
-func a() {
-	//f, err := os.Open("../sample.txt")
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
+// We're assuming length is always valid!
+func popAFew(stack *[]string, count int) []string {
+	l := len(*stack)
+	last := (*stack)[l-count:]
+	*stack = (*stack)[:l-count]
+	return last
+}
 
+func scanStacks(scanner *bufio.Scanner) [][]string {
 	stacks := make([][]string, 3)
-	fmt.Printf("stacks: %v\n", stacks)
-
-	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		isDone := addCrates(&stacks, scanner.Text())
 		fmt.Printf("stacks: %v\n", stacks)
@@ -66,6 +66,19 @@ func a() {
 	}
 	// empty line
 	scanner.Scan()
+	return stacks
+}
+
+func a() {
+	//f, err := os.Open("../sample.txt")
+	f, err := os.Open("../input.txt")
+	if err != nil {
+		panic("Can't read input")
+	}
+
+	scanner := bufio.NewScanner(f)
+
+	stacks := scanStacks(scanner)
 
 	for scanner.Scan() {
 		crates, from, to := getStep(scanner.Text())
@@ -75,6 +88,32 @@ func a() {
 			stacks[to] = append(stacks[to], crate)
 			fmt.Printf("stacks: %v\n", stacks)
 		}
+	}
+
+	lastCrates := ""
+	for _, stack := range stacks {
+		lastCrates = lastCrates + pop(&stack)
+	}
+
+	fmt.Printf("Part1: %s\n", lastCrates)
+}
+
+func b() {
+	//f, err := os.Open("../sample.txt")
+	f, err := os.Open("../input.txt")
+	if err != nil {
+		panic("Can't read input")
+	}
+
+	scanner := bufio.NewScanner(f)
+
+	stacks := scanStacks(scanner)
+
+	for scanner.Scan() {
+		crates, from, to := getStep(scanner.Text())
+		cratesList := popAFew(&stacks[from], crates)
+		stacks[to] = append(stacks[to], cratesList...)
+		fmt.Printf("stacks: %v\n", stacks)
 	}
 
 	lastCrates := ""
@@ -107,5 +146,6 @@ func getStep(l string) (int, int, int) {
 }
 
 func main() {
-	a()
+	//a()
+	b()
 }
