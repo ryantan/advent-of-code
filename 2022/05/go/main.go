@@ -4,141 +4,94 @@ import (
 	"bufio"
 	"fmt"
 	"github/ryantan/advent-of-code/2022/common"
-	"strconv"
-	"strings"
 )
 
 //var fileName = "../sample.txt"
 var fileName = "../input.txt"
+var columnWidth = 4
 
-func addCrates(stacksPtr *[][]string, l string) bool {
-	stackCount := len(*stacksPtr)
-	length := len(l)
-	line := []rune(l)
-
+func addCrates(stacks *[][]string, line []rune) bool {
+	// Stop at the ` 1   2   3 ...` line.
 	if line[1] == '1' {
-		// Finish
 		return true
 	}
 
-	stackIndex := 0
-	for true {
-		indexOfCrate := (stackIndex * 4) + 1
-		if length < indexOfCrate {
-			return false
+	for i := 0; i*columnWidth < len(line); i++ {
+		// Append new stack when required.
+		if i >= len(*stacks) {
+			*stacks = append(*stacks, []string{})
 		}
-		crate := string(line[indexOfCrate])
-		if crate == " " {
-			// ignore
-		} else {
-			if stackIndex >= stackCount {
-				*stacksPtr = append(*stacksPtr, []string{})
-			}
-			(*stacksPtr)[stackIndex] = append([]string{crate}, (*stacksPtr)[stackIndex]...)
+
+		// Prepend crate to stack.
+		if crate := string(line[(i*columnWidth)+1]); crate != " " {
+			(*stacks)[i] = append([]string{crate}, (*stacks)[i]...)
 		}
-		stackIndex++
 	}
 
 	return false
 }
 
-func pop(stack *[]string) string {
-	l := len(*stack)
-	last := (*stack)[l-1]
-	*stack = (*stack)[:l-1]
-	return last
-}
-
 // We're assuming length is always valid!
 func popAFew(stack *[]string, count int) []string {
-	l := len(*stack)
-	last := (*stack)[l-count:]
-	*stack = (*stack)[:l-count]
+	l := len(*stack) - count
+	last := (*stack)[l:]
+	*stack = (*stack)[:l]
 	return last
 }
 
 func scanStacks(scanner *bufio.Scanner) [][]string {
 	stacks := make([][]string, 3)
 	for scanner.Scan() {
-		isDone := addCrates(&stacks, scanner.Text())
-		//fmt.Printf("stacks: %v\n", stacks)
-		if isDone {
-			//fmt.Printf("done stacks: %v\n", stacks)
+		if isDone := addCrates(&stacks, []rune(scanner.Text())); isDone {
 			break
 		}
 	}
-	// empty line
+	// Empty line separating stacks and moves.
 	scanner.Scan()
 	return stacks
 }
 
-func a() {
+func getStep(l string) (int, int, int) {
+	var cratesCount, from, to int
+	_, err := fmt.Sscanf(l, "move %d from %d to %d", &cratesCount, &from, &to)
+	if err != nil {
+		panic("Could not parse step input " + l)
+	}
+	//fmt.Printf("Move %d from %d to %d\n", cratesCount, from, to)
+	return cratesCount, from - 1, to - 1
+}
+
+func a(oneByOne bool) {
 	scanner := common.GetLineScanner(fileName)
+
 	// Scan stacks.
 	stacks := scanStacks(scanner)
 
 	// Scan moves.
 	for scanner.Scan() {
-		crates, from, to := getStep(scanner.Text())
+		cratesCount, from, to := getStep(scanner.Text())
 
-		for i := 0; i < crates; i++ {
-			crate := pop(&stacks[from])
-			stacks[to] = append(stacks[to], crate)
+		intermediateSteps := 1
+		if oneByOne {
+			intermediateSteps, cratesCount = cratesCount, intermediateSteps
+		}
+
+		for i := 0; i < intermediateSteps; i++ {
+			crates := popAFew(&stacks[from], cratesCount)
+			stacks[to] = append(stacks[to], crates...)
 			//fmt.Printf("stacks: %v\n", stacks)
 		}
 	}
 
 	lastCrates := ""
 	for _, stack := range stacks {
-		lastCrates = lastCrates + pop(&stack)
+		lastCrates = lastCrates + popAFew(&stack, 1)[0]
 	}
 
-	fmt.Printf("Part1: %s\n", lastCrates)
-}
-
-func b() {
-	scanner := common.GetLineScanner(fileName)
-	// Scan stacks.
-	stacks := scanStacks(scanner)
-
-	// Scan moves.
-	for scanner.Scan() {
-		crates, from, to := getStep(scanner.Text())
-		cratesList := popAFew(&stacks[from], crates)
-		stacks[to] = append(stacks[to], cratesList...)
-		//fmt.Printf("stacks: %v\n", stacks)
-	}
-
-	lastCrates := ""
-	for _, stack := range stacks {
-		lastCrates = lastCrates + pop(&stack)
-	}
-
-	fmt.Printf("Part1: %s\n", lastCrates)
-}
-
-func getStep(l string) (int, int, int) {
-	parts := strings.Split(l, " ")
-	cratesCount, err := strconv.Atoi(parts[1])
-	if err != nil {
-		panic("Could not get number of crates to move.")
-	}
-
-	from, err := strconv.Atoi(parts[3])
-	if err != nil {
-		panic("Could not get from.")
-	}
-
-	to, err := strconv.Atoi(parts[5])
-	if err != nil {
-		panic("Could not get to.")
-	}
-
-	//fmt.Printf("Move %d from %d to %d\n", cratesCount, from, to)
-	return cratesCount, from - 1, to - 1
+	fmt.Printf("Top crates: %s\n", lastCrates)
 }
 
 func main() {
-	a()
-	b()
+	a(true)
+	a(false)
 }
