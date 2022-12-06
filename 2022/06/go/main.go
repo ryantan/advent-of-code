@@ -1,9 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github/ryantan/advent-of-code/2022/common"
 )
 
 //var fileName = "../sample.txt"
@@ -53,37 +52,25 @@ func findSequenceOfDistinct(s []rune, count int) int {
 }
 
 func a() {
-	f, err := os.Open(fileName)
-	if err != nil {
-		panic("Can't read input")
-	}
-
-	scanner := bufio.NewScanner(f)
-
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		l := []rune(scanner.Text())
 		processed := findSequenceOfDistinct(l, 4)
 		fmt.Printf("Part1: %d\n", processed)
 	}
 
-	fmt.Printf("Part1 done\n")
+	//fmt.Printf("Part1 done\n")
 }
 
 func b() {
-	f, err := os.Open(fileName)
-	if err != nil {
-		panic("Can't read input")
-	}
-
-	scanner := bufio.NewScanner(f)
-
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		l := []rune(scanner.Text())
 		processed := findSequenceOfDistinct(l, 14)
 		fmt.Printf("Part2: %d\n", processed)
 	}
 
-	fmt.Printf("Part2 done\n")
+	//fmt.Printf("Part2 done\n")
 }
 
 func main() {

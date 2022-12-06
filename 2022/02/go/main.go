@@ -1,17 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github/ryantan/advent-of-code/2022/common"
 )
 
-func a() int {
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
+//var fileName = "../sample.txt"
+var fileName = "../input.txt"
 
+func a() int {
 	totalScore := 0
 
 	// A = Rock
@@ -32,7 +29,7 @@ func a() int {
 		"C Z": 6, // 3 + 3
 	}
 
-	scanner := bufio.NewScanner(f)
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		moves := scanner.Text()
 		score := scores[moves]
@@ -45,11 +42,6 @@ func a() int {
 }
 
 func b() int {
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
 	totalScore := 0
 
 	// A = Rock
@@ -70,7 +62,7 @@ func b() int {
 		"C Z": 7, // 6 + 1 // Scissors x Rock
 	}
 
-	scanner := bufio.NewScanner(f)
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		moves := scanner.Text()
 		score := scores[moves]
@@ -83,6 +75,6 @@ func b() int {
 }
 
 func main() {
-	//a()
+	a()
 	b()
 }

@@ -1,10 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github/ryantan/advent-of-code/2022/common"
 )
+
+//var fileName = "../sample.txt"
+var fileName = "../input.txt"
 
 func getRanges(l string) (int, int, int, int) {
 	var from1, to1, from2, to2 int
@@ -21,15 +23,9 @@ func getRanges(l string) (int, int, int, int) {
 }
 
 func a() {
-	//f, err := os.Open("../sample.txt")
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
 	total := 0
 
-	scanner := bufio.NewScanner(f)
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		from1, to1, from2, to2 := getRanges(scanner.Text())
 		//fmt.Printf("%d - %d, %d - %d\n", from1, to1, from2, to2)
@@ -57,15 +53,9 @@ func a() {
 }
 
 func b() {
-	//f, err := os.Open("../sample.txt")
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
 	total := 0
 
-	scanner := bufio.NewScanner(f)
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		from1, to1, from2, to2 := getRanges(scanner.Text())
 		//fmt.Printf("%d - %d, %d - %d\n", from1, to1, from2, to2)

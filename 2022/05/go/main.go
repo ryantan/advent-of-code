@@ -3,10 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"github/ryantan/advent-of-code/2022/common"
 	"strconv"
 	"strings"
 )
+
+//var fileName = "../sample.txt"
+var fileName = "../input.txt"
 
 func addCrates(stacksPtr *[][]string, l string) bool {
 	stackCount := len(*stacksPtr)
@@ -58,9 +61,9 @@ func scanStacks(scanner *bufio.Scanner) [][]string {
 	stacks := make([][]string, 3)
 	for scanner.Scan() {
 		isDone := addCrates(&stacks, scanner.Text())
-		fmt.Printf("stacks: %v\n", stacks)
+		//fmt.Printf("stacks: %v\n", stacks)
 		if isDone {
-			fmt.Printf("done stacks: %v\n", stacks)
+			//fmt.Printf("done stacks: %v\n", stacks)
 			break
 		}
 	}
@@ -70,23 +73,18 @@ func scanStacks(scanner *bufio.Scanner) [][]string {
 }
 
 func a() {
-	//f, err := os.Open("../sample.txt")
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
-	scanner := bufio.NewScanner(f)
-
+	scanner := common.GetLineScanner(fileName)
+	// Scan stacks.
 	stacks := scanStacks(scanner)
 
+	// Scan moves.
 	for scanner.Scan() {
 		crates, from, to := getStep(scanner.Text())
 
 		for i := 0; i < crates; i++ {
 			crate := pop(&stacks[from])
 			stacks[to] = append(stacks[to], crate)
-			fmt.Printf("stacks: %v\n", stacks)
+			//fmt.Printf("stacks: %v\n", stacks)
 		}
 	}
 
@@ -99,21 +97,16 @@ func a() {
 }
 
 func b() {
-	//f, err := os.Open("../sample.txt")
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
-	scanner := bufio.NewScanner(f)
-
+	scanner := common.GetLineScanner(fileName)
+	// Scan stacks.
 	stacks := scanStacks(scanner)
 
+	// Scan moves.
 	for scanner.Scan() {
 		crates, from, to := getStep(scanner.Text())
 		cratesList := popAFew(&stacks[from], crates)
 		stacks[to] = append(stacks[to], cratesList...)
-		fmt.Printf("stacks: %v\n", stacks)
+		//fmt.Printf("stacks: %v\n", stacks)
 	}
 
 	lastCrates := ""
@@ -141,11 +134,11 @@ func getStep(l string) (int, int, int) {
 		panic("Could not get to.")
 	}
 
-	fmt.Printf("Move %d from %d to %d\n", cratesCount, from, to)
+	//fmt.Printf("Move %d from %d to %d\n", cratesCount, from, to)
 	return cratesCount, from - 1, to - 1
 }
 
 func main() {
-	//a()
+	a()
 	b()
 }

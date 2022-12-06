@@ -1,24 +1,20 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github/ryantan/advent-of-code/2022/common"
 	"sort"
 	"strconv"
 )
 
+//var fileName = "../sample.txt"
+var fileName = "../input.txt"
+
 func readCalories() []int {
-
-	f, err := os.Open("../input.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
 	caloriesByElf := make([]int, 0)
-
-	scanner := bufio.NewScanner(f)
 	caloriesNow := 0
+
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		line := scanner.Text()
 		//fmt.Println(line)
@@ -65,6 +61,6 @@ func b() {
 }
 
 func main() {
-	//a()
+	a()
 	b()
 }

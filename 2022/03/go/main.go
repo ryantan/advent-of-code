@@ -1,10 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"github/ryantan/advent-of-code/2022/common"
 )
+
+//var fileName = "../sample.txt"
+var fileName = "../input.txt"
 
 func priority(s string) int {
 	if len(s) == 0 {
@@ -20,15 +22,9 @@ func priority(s string) int {
 }
 
 func a() int {
-	f, err := os.Open("../input.txt")
-	//f, err := os.Open("../sample.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
 	totalPriorities := 0
 
-	scanner := bufio.NewScanner(f)
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		contents := []rune(scanner.Text())
 
@@ -48,8 +44,8 @@ func a() int {
 			}
 		}
 
-		fmt.Printf("dup: %v\n", dup)
-		fmt.Printf("priority: %v\n", priority(dup))
+		//fmt.Printf("dup: %v\n", dup)
+		//fmt.Printf("priority: %v\n", priority(dup))
 
 		totalPriorities += priority(dup)
 	}
@@ -59,15 +55,9 @@ func a() int {
 }
 
 func b() int {
-	f, err := os.Open("../input.txt")
-	//f, err := os.Open("../sample.txt")
-	if err != nil {
-		panic("Can't read input")
-	}
-
 	totalPriorities := 0
 
-	scanner := bufio.NewScanner(f)
+	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		contents1 := []rune(scanner.Text())
 
@@ -98,8 +88,8 @@ func b() int {
 			}
 		}
 
-		fmt.Printf("dup: %v\n", dup)
-		fmt.Printf("priority: %v\n", priority(dup))
+		//fmt.Printf("dup: %v\n", dup)
+		//fmt.Printf("priority: %v\n", priority(dup))
 
 		totalPriorities += priority(dup)
 	}
@@ -109,6 +99,6 @@ func b() int {
 }
 
 func main() {
-	//a()
+	a()
 	b()
 }
