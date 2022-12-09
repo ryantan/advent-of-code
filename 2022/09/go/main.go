@@ -13,8 +13,26 @@ var fileName = "../input.txt"
 
 type coord [2]int
 
-func followHead(head coord, tail coord) coord {
-	diffX, diffY := head[0]-tail[0], head[1]-tail[1]
+var directionalMoves = map[string]coord{
+	"L": {-1, 0},
+	"U": {0, -1},
+	"R": {1, 0},
+	"D": {0, 1},
+}
+
+func (c *coord) Move(value coord) {
+	c[0] += value[0]
+	c[1] += value[1]
+}
+
+func (c *coord) Add(x int, y int) *coord {
+	c[0] += x
+	c[1] += y
+	return c
+}
+
+func (c *coord) follow(head coord) *coord {
+	diffX, diffY := head[0]-c[0], head[1]-c[1]
 	diffX2, diffY2 := diffX*diffX, diffY*diffY
 	diff := diffX2 + diffY2
 	//fmt.Printf("diff: %d (%d, %d)\n", diff, diffX, diffY)
@@ -22,23 +40,23 @@ func followHead(head coord, tail coord) coord {
 	// 0: same position, 1: 1 space straight, or 2: 1 space diagonal.
 	if diff == 0 || diff == 1 || diff == 2 {
 		// No change.
-		return tail
+		return c
 	}
 
 	// 4: 2 space straight left/up/right/down,
 	// 8: 2 space diagonally
 	if diff == 4 || diff == 8 {
 		// Move 1 left/up/right/down or 1 diagonally.
-		return coord{tail[0] + (diffX / 2), tail[1] + (diffY / 2)}
+		return c.Add(diffX/2, diffY/2)
 	}
 
 	// Last possible case: 5: 1 space in one dimension, 2 in the other.
 	if diffY2 > diffX2 {
 		// 1 space in x, 2 space in y
-		return coord{tail[0] + diffX, tail[1] + (diffY / 2)}
+		return c.Add(diffX, diffY/2)
 	} else {
 		// 2 space in x, 1 space in y
-		return coord{tail[0] + (diffX / 2), tail[1] + diffY}
+		return c.Add(diffX/2, diffY)
 	}
 }
 
@@ -52,27 +70,18 @@ func a(numberOfKnots int) int {
 	direction, moves := "", 0
 	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
-		l := scanner.Text()
-		_, err := fmt.Sscanf(l, "%s %d", &direction, &moves)
+		_, err := fmt.Sscanf(scanner.Text(), "%s %d", &direction, &moves)
 		if err != nil {
 			panic("Could not parse input.")
 		}
 
 		for i := 0; i < moves; i++ {
 			// Move head.
-			if direction == "L" {
-				knotCoords[0][0]--
-			} else if direction == "U" {
-				knotCoords[0][1]--
-			} else if direction == "R" {
-				knotCoords[0][0]++
-			} else if direction == "D" {
-				knotCoords[0][1]++
-			}
+			knotCoords[0].Move(directionalMoves[direction])
 
 			// Move knots.
 			for k := 1; k < numberOfKnots; k++ {
-				knotCoords[k] = followHead(knotCoords[k-1], knotCoords[k])
+				knotCoords[k].follow(knotCoords[k-1])
 			}
 
 			// Track tail positions.
