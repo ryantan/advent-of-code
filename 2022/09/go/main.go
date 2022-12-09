@@ -60,12 +60,15 @@ func (c *coord) follow(head coord) *coord {
 	}
 }
 
-func a(numberOfKnots int) int {
+func findUniquePositions(numberOfKnots int) int {
 	// Keeps track of knot positions.
 	knotCoords := make([]coord, numberOfKnots)
+	head := &knotCoords[0]
+	tail := &knotCoords[numberOfKnots-1]
 
-	// Keeps track of tail (the last knot) positions.
-	tailCoords := make([]coord, 0)
+	// Count unique coords.
+	positions := make(map[coord]bool, 0)
+	uniquePositions := 0
 
 	direction, moves := "", 0
 	scanner := common.GetLineScanner(fileName)
@@ -77,36 +80,28 @@ func a(numberOfKnots int) int {
 
 		for i := 0; i < moves; i++ {
 			// Move head.
-			knotCoords[0].Move(directionalMoves[direction])
+			head.Move(directionalMoves[direction])
 
 			// Move knots.
 			for k := 1; k < numberOfKnots; k++ {
 				knotCoords[k].follow(knotCoords[k-1])
 			}
 
-			// Track tail positions.
-			tailCoords = append(tailCoords, knotCoords[numberOfKnots-1])
+			// Count unique tail positions.
+			if _, exists := positions[*tail]; !exists {
+				positions[*tail] = true
+				uniquePositions++
+			}
+
+			// If we want to visualize every move.
 			//debug.PrintKnots(knotCoords)
 		}
-		//fmt.Printf("tailCoords: %+v\n", tailCoords)
 	}
 
-	// Count unique coords.
-	positions := make(map[coord]bool, 0)
-	totalPositions := 0
-	for _, position := range tailCoords {
-		if _, exists := positions[position]; !exists {
-			positions[position] = true
-			totalPositions++
-		}
-	}
-
-	return totalPositions
+	return uniquePositions
 }
 
 func main() {
-	part1 := a(2)
-	fmt.Printf("Part1: %d\n", part1)
-	part2 := a(10)
-	fmt.Printf("Part2: %d\n", part2)
+	fmt.Printf("Part1: %d\n", findUniquePositions(2))
+	fmt.Printf("Part2: %d\n", findUniquePositions(10))
 }
