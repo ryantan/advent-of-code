@@ -11,7 +11,9 @@ import (
 
 var fileName = "../input.txt"
 
-func followHead(head [2]int, tail [2]int) [2]int {
+type coord [2]int
+
+func followHead(head coord, tail coord) coord {
 	diffX, diffY := head[0]-tail[0], head[1]-tail[1]
 	diffX2, diffY2 := diffX*diffX, diffY*diffY
 	diff := diffX2 + diffY2
@@ -27,25 +29,25 @@ func followHead(head [2]int, tail [2]int) [2]int {
 	// 8: 2 space diagonally
 	if diff == 4 || diff == 8 {
 		// Move 1 left/up/right/down or 1 diagonally.
-		return [2]int{tail[0] + (diffX / 2), tail[1] + (diffY / 2)}
+		return coord{tail[0] + (diffX / 2), tail[1] + (diffY / 2)}
 	}
 
 	// Last possible case: 5: 1 space in one dimension, 2 in the other.
 	if diffY2 > diffX2 {
 		// 1 space in x, 2 space in y
-		return [2]int{tail[0] + diffX, tail[1] + (diffY / 2)}
+		return coord{tail[0] + diffX, tail[1] + (diffY / 2)}
 	} else {
 		// 2 space in x, 1 space in y
-		return [2]int{tail[0] + (diffX / 2), tail[1] + diffY}
+		return coord{tail[0] + (diffX / 2), tail[1] + diffY}
 	}
 }
 
 func a(numberOfKnots int) int {
 	// Keeps track of knot positions.
-	knotCoords := make([][2]int, numberOfKnots)
+	knotCoords := make([]coord, numberOfKnots)
 
 	// Keeps track of tail (the last knot) positions.
-	tailCoords := make([][2]int, 0)
+	tailCoords := make([]coord, 0)
 
 	direction, moves := "", 0
 	scanner := common.GetLineScanner(fileName)
@@ -81,10 +83,9 @@ func a(numberOfKnots int) int {
 	}
 
 	// Count unique coords.
-	positions := make(map[string]bool, 0)
+	positions := make(map[coord]bool, 0)
 	totalPositions := 0
-	for _, coord := range tailCoords {
-		position := fmt.Sprintf("%d,%d", coord[0], coord[1])
+	for _, position := range tailCoords {
 		if _, exists := positions[position]; !exists {
 			positions[position] = true
 			totalPositions++
