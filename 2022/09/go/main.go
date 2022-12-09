@@ -9,56 +9,45 @@ var fileName = "../input.txt"
 
 type coord [2]int
 
-var directionalMoves = map[string]coord{
-	"L": {-1, 0},
-	"U": {0, -1},
-	"R": {1, 0},
-	"D": {0, 1},
-}
+var directionalMoves = map[string][]int{"L": {-1, 0}, "U": {0, -1}, "R": {1, 0}, "D": {0, 1}}
 
-func (c *coord) Move(value coord) {
+func (c *coord) move(value ...int) *coord {
 	c[0] += value[0]
 	c[1] += value[1]
-}
-
-func (c *coord) Add(x int, y int) *coord {
-	c[0] += x
-	c[1] += y
 	return c
 }
 
 func (c *coord) follow(head coord) *coord {
-	diffX, diffY := head[0]-c[0], head[1]-c[1]
-	diffX2, diffY2 := diffX*diffX, diffY*diffY
-	diff := diffX2 + diffY2
+	dX, dY := head[0]-c[0], head[1]-c[1]
+	dX2, dY2 := dX*dX, dY*dY
+	diff := dX2 + dY2
 
-	// 0: same position, 1: 1 space straight, or 2: 1 space diagonal.
-	if diff == 0 || diff == 1 || diff == 2 {
-		// No change.
-		return c
-	}
-
-	// 4: 2 space straight, 8: 2 space diagonally
+	// 4: 2 spaces straight, 8: 2 spaces diagonally
 	if diff == 4 || diff == 8 {
 		// Move 1 straight or diagonally.
-		return c.Add(diffX/2, diffY/2)
+		return c.move(dX/2, dY/2)
 	}
 
-	// Last possible case: 5: 1 space in one dimension, 2 in the other.
-	if diffY2 > diffX2 {
-		// 1 space in x, 2 space in y
-		return c.Add(diffX, diffY/2)
-	} else {
-		// 2 space in x, 1 space in y
-		return c.Add(diffX/2, diffY)
+	// 5: 1 space in one dimension, 2 in the other.
+	if diff == 5 {
+		if dY2 > dX2 {
+			// Move 1 in x, 2 in y
+			return c.move(dX, dY/2)
+		} else {
+			// Move 2 in x, 1 in y
+			return c.move(dX/2, dY)
+		}
 	}
+
+	// Remaining possibilities:
+	// 0: same position, 1: 1 space straight, or 2: 1 space diagonal.
+	return c // No change.
 }
 
 func findUniquePositions(numberOfKnots int) int {
-	knotCoords := make([]coord, numberOfKnots)
-	head, tail := &knotCoords[0], &knotCoords[numberOfKnots-1]
-	positions := make(map[coord]bool, 0)
-	uniquePositions := 0
+	knots := make([]coord, numberOfKnots)
+	tail := &knots[numberOfKnots-1]
+	tailPositions, uniquePositions := make(map[coord]bool, 0), 0
 
 	direction, moves := "", 0
 	scanner := common.GetLineScanner(fileName)
@@ -67,17 +56,16 @@ func findUniquePositions(numberOfKnots int) int {
 			panic("Could not parse input.")
 		}
 		for i := 0; i < moves; i++ {
-			head.Move(directionalMoves[direction])
+			knots[0].move(directionalMoves[direction]...)
 			for k := 1; k < numberOfKnots; k++ {
-				knotCoords[k].follow(knotCoords[k-1])
+				knots[k].follow(knots[k-1])
 			}
-			if _, exists := positions[*tail]; !exists {
-				positions[*tail] = true
+			if _, exists := tailPositions[*tail]; !exists {
+				tailPositions[*tail] = true
 				uniquePositions++
 			}
 		}
 	}
-
 	return uniquePositions
 }
 
