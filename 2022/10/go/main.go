@@ -5,11 +5,8 @@ import (
 	"github/ryantan/advent-of-code/2022/common"
 )
 
-var fileName = "../input.txt"
-
 func main() {
-	cycle, value, opValue := 0, 1, 0
-	nextSampleCycle, totalSamplesValue := 20, 0
+	cycle, value, opValue, totalSamplesValue := 0, 1, 0, 0
 
 	tick := func() {
 		x := cycle % 40
@@ -23,13 +20,12 @@ func main() {
 		}
 
 		cycle++
-		if cycle == nextSampleCycle {
-			totalSamplesValue += nextSampleCycle * value
-			nextSampleCycle += 40
+		if cycle%20 == 0 && cycle%40 != 0 {
+			totalSamplesValue += cycle * value
 		}
 	}
 
-	scanner := common.GetLineScanner(fileName)
+	scanner := common.GetLineScanner("../input.txt")
 	for scanner.Scan() {
 		tick()
 		if _, err := fmt.Sscanf(scanner.Text(), "addx %d", &opValue); err == nil {
