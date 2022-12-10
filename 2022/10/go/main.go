@@ -13,40 +13,37 @@ var fileName = "../input.txt"
 
 func a() {
 	cycle := 0
-	//opValue, opCountDown := 0, 0
 	nextSampleCycle := 20
-	//sampledValues := make([]int, 0)
 	totalSamplesValue := 0
 	value := 1
+
+	takeSample := func() {
+		cycle++
+		fmt.Printf("%d: %d\n", cycle, value)
+		if cycle == nextSampleCycle {
+			totalSamplesValue += nextSampleCycle * value
+			fmt.Printf("=== %d: %d (%d)\n", cycle, value, nextSampleCycle*value)
+			nextSampleCycle += 40
+		}
+	}
 
 	scanner := common.GetLineScanner(fileName)
 	for scanner.Scan() {
 		l := strings.Split(scanner.Text(), " ")
 
-		valueAfterSample := value
 		if l[0] == "noop" {
-			cycle++
-		} else {
-			v, err := strconv.Atoi(l[1])
-			if err != nil {
-				panic("Could not parse input")
-			}
-			//fmt.Printf("v: %d\n", v)
-			valueAfterSample = value + v
-
-			cycle += 2
+			takeSample()
+			continue
 		}
 
-		if cycle >= nextSampleCycle {
-			//sampledValues = append(sampledValues, value)
-			totalSamplesValue += nextSampleCycle * value
-			fmt.Printf("=== %d: %d\n", cycle-1, value)
-			nextSampleCycle += 40
+		opValue, err := strconv.Atoi(l[1])
+		if err != nil {
+			panic("Could not parse input")
 		}
-		value = valueAfterSample
 
-		fmt.Printf("%d: %d\n", cycle, value)
-
+		takeSample()
+		takeSample()
+		value += opValue
 	}
 
 	fmt.Printf("Part1: %d\n", totalSamplesValue)
