@@ -6,11 +6,11 @@ import (
 )
 
 func main() {
-	cycle, value, opValue, totalSamplesValue := 0, 1, 0, 0
+	cycle, x, opValue, totalSamplesValue := 0, 1, 0, 0
 
 	tick := func() {
-		x := cycle % 40
-		if x == value-1 || x == value || x == value+1 {
+		c40 := cycle % 40
+		if c40 == x-1 || c40 == x || c40 == x+1 {
 			print("#")
 		} else {
 			print(".")
@@ -21,7 +21,7 @@ func main() {
 
 		cycle++
 		if cycle%20 == 0 && cycle%40 != 0 {
-			totalSamplesValue += cycle * value
+			totalSamplesValue += cycle * x
 		}
 	}
 
@@ -30,7 +30,7 @@ func main() {
 		tick()
 		if _, err := fmt.Sscanf(scanner.Text(), "addx %d", &opValue); err == nil {
 			tick()
-			value += opValue
+			x += opValue
 		}
 	}
 
