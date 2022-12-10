@@ -18,11 +18,21 @@ func a() {
 	value := 1
 
 	takeSample := func() {
+		x := cycle % 40
+		if x == value-1 || x == value || x == value+1 {
+			print("#")
+		} else {
+			print(".")
+		}
+		if x == 39 {
+			print("\n")
+		}
+
 		cycle++
-		fmt.Printf("%d: %d\n", cycle, value)
+		//fmt.Printf("%d: %d\n", cycle, value)
 		if cycle == nextSampleCycle {
 			totalSamplesValue += nextSampleCycle * value
-			fmt.Printf("=== %d: %d (%d)\n", cycle, value, nextSampleCycle*value)
+			//fmt.Printf("=== %d: %d (%d)\n", cycle, value, nextSampleCycle*value)
 			nextSampleCycle += 40
 		}
 	}
