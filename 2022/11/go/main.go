@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	//scanner := common.GetLineScanner("../sample.txt")
 	scanner := common.GetLineScanner("../input.txt")
 

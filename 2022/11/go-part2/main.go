@@ -10,8 +10,8 @@ import (
 )
 
 type Item struct {
-	initialWorry int
-	remainders   map[int]int // remainder for each factor
+	worry      int
+	remainders map[int]int // remainder for each factor
 }
 
 func (item *Item) initialRemainders() {
@@ -20,7 +20,7 @@ func (item *Item) initialRemainders() {
 	}
 	newRemainders := make(map[int]int, 0)
 	for _, factor := range divisors {
-		newRemainders[factor] = item.initialWorry % factor
+		newRemainders[factor] = item.worry % factor
 	}
 	item.remainders = newRemainders
 }
@@ -104,7 +104,7 @@ func main() {
 		for _, worry := range itemsRaw {
 			worry, _ := strconv.Atoi(worry)
 			item := Item{
-				initialWorry: worry,
+				worry: worry,
 			}
 			items = append(items, &item)
 			monkeyItems = append(monkeyItems, &item)
@@ -202,7 +202,7 @@ func main() {
 
 func printItems(items []*Item) {
 	for i, item := range items {
-		fmt.Printf("\nItem %d (%d):\n", i, item.initialWorry)
+		fmt.Printf("\nItem %d (%d):\n", i, item.worry)
 		for factor, remainder := range item.remainders {
 			fmt.Printf("  %% %d: %d\n", factor, remainder)
 		}
@@ -213,7 +213,7 @@ func printMonkeyItems(monkeys []*Monkey) {
 	for i, monkey := range monkeys {
 		itemWorryLevels := make([]int, 0)
 		for _, item := range monkey.items {
-			itemWorryLevels = append(itemWorryLevels, item.initialWorry)
+			itemWorryLevels = append(itemWorryLevels, item.worry)
 		}
 		fmt.Printf("Monkey %d: %v\n", i, itemWorryLevels)
 	}
