@@ -66,7 +66,9 @@ func (item *Item) divisibleBy(factor int) bool {
 
 func (item *Item) factorize() *big.Int {
 	factoringCalled++
-	fmt.Printf("factoringCalled #%d\n", factoringCalled)
+	if factoringCalled%100 == 0 {
+		fmt.Printf("factoringCalled #%d\n", factoringCalled)
+	}
 
 	opsPending := len(item.opChainPending)
 	if opsPending == 0 {
@@ -270,12 +272,12 @@ func main() {
 	//rounds := 1
 	//rounds := 2
 	//rounds := 20
-	rounds := 1000
+	//rounds := 1000
 	//rounds := 2000
-	//rounds := 10000
+	rounds := 10000
 	start := time.Now()
 	for r := 1; r <= rounds; r++ {
-		roundStart := time.Now()
+		//roundStart := time.Now()
 		for m, monkey := range monkeys {
 			tempItems := monkey.items
 			//fmt.Printf("monkey %d items: %+v\n", m, items)
@@ -288,11 +290,17 @@ func main() {
 				//printMonkeyItems(monkeys)
 			}
 		}
-		//fmt.Printf("== After round %d ==\nmonkeyInspected: %+v\n\n", r, monkeyInspected)
-		//printMonkeyItems(monkeys)
-		//printItems(items)
-		elapsed := time.Since(roundStart)
-		fmt.Printf("Round %d took %s\n\n", r, elapsed)
+
+		//elapsed := time.Since(roundStart)
+		//fmt.Printf("Round %d took %s\n\n", r, elapsed)
+
+		if r%1000 == 0 {
+			fmt.Printf("== After round %d ==\nmonkeyInspected: %+v\n\n", r, monkeyInspected)
+			//printMonkeyItems(monkeys)
+			//printItems(items)
+			elapsed := time.Since(start)
+			fmt.Printf("Elapsed: %s\n\n", elapsed)
+		}
 	}
 	elapsed := time.Since(start)
 	fmt.Printf("%d rounds took %s\n\n", rounds, elapsed)
