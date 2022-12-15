@@ -67,7 +67,7 @@ func a() int {
 	}
 	maxSteps = len(heightMap) * len(heightMap[0])
 
-	shortestPathSteps, shortestPath, shortestPathDir := findPath(nodes[startNodeId], nodes[endNodeId])
+	shortestPathSteps, shortestPath, shortestPathDir := findPath(nodes[endNodeId], nodes[startNodeId])
 
 	fmt.Printf("shortestPath: %d, shortestPathDir: %d\n", len(shortestPath), len(shortestPathDir))
 	printPathOnMap(heightMap, shortestPath, shortestPathDir)
@@ -76,6 +76,9 @@ func a() int {
 }
 
 func findPath(start, end *Node) (int, []*Node, []int) {
+	var shortestPath []*Node
+	var shortestPathDir []int
+	shortestPathSteps := maxSteps
 
 	queue := make([]*Node, 0)
 	var currentNode *Node
@@ -93,6 +96,37 @@ func findPath(start, end *Node) (int, []*Node, []int) {
 	//	fmt.Printf("%d parents found.\n", len(parent))
 	//}
 
+	getPath := func(endNode *Node) ([]*Node, []int) {
+		var path []*Node
+		var pathDir []int
+
+		currentNode = endNode
+		for {
+			//fmt.Printf("Looking for parent of %d\n", currentNode.id)
+			if parentNode, exists := parent[currentNode.id]; exists {
+				//fmt.Printf("%d > %d\n", parentNode.id, currentNode.id)
+				path = append([]*Node{parentNode}, path...)
+				pathDir = append([]int{directionTo[currentNode.id]}, pathDir...)
+				currentNode = parentNode
+			} else {
+				//fmt.Printf("?? > %d\n", currentNode.id)
+				break
+			}
+		}
+		return path, pathDir
+	}
+
+	checkPath := func(endNode *Node) {
+		path, pathDir := getPath(endNode)
+		fmt.Printf("path: %v\n", path)
+		if len(path) >= shortestPathSteps {
+			return
+		}
+		shortestPath = path
+		shortestPathDir = pathDir
+		shortestPathSteps = len(path)
+	}
+
 	visitCount := 0
 
 	queue = append(queue, start)
@@ -109,8 +143,16 @@ func findPath(start, end *Node) (int, []*Node, []int) {
 		currentNode = queue[0]
 		//fmt.Printf("Visiting: %v %s\n", currentNode.pos, currentNode.label)
 
-		if currentNode.id == end.id {
-			//fmt.Printf("Reached end!\n")
+		//if currentNode.id == end.id {
+		//	fmt.Printf("currentNode.value: %v\n", currentNode.value)
+		//	//fmt.Printf("Reached end!\n")
+		//	checkPath()
+		//	break
+		//}
+
+		if currentNode.value == 'a' {
+			//fmt.Printf("Reached an 'a'!\n")
+			checkPath(currentNode)
 			break
 		}
 
@@ -126,7 +168,7 @@ func findPath(start, end *Node) (int, []*Node, []int) {
 			}
 
 			// Check if reachable
-			diff := neighbour.value - currentNode.value
+			diff := currentNode.value - neighbour.value
 			if diff > 1 {
 				// Cannot reach
 				continue
@@ -145,26 +187,7 @@ func findPath(start, end *Node) (int, []*Node, []int) {
 		//printQueue("After queuing", queue)
 	}
 	//printParents()
-
-	shortestPathSteps := maxSteps
-	var shortestPath []*Node
-	var shortestPathDir []int
-	currentNode = end
-	for {
-		//fmt.Printf("Looking for parent of %d\n", currentNode.id)
-		if parentNode, exists := parent[currentNode.id]; exists {
-			//fmt.Printf("%d > %d\n", parentNode.id, currentNode.id)
-			shortestPath = append([]*Node{parentNode}, shortestPath...)
-			shortestPathDir = append([]int{directionTo[currentNode.id]}, shortestPathDir...)
-			currentNode = parentNode
-		} else {
-			//fmt.Printf("?? > %d\n", currentNode.id)
-			break
-		}
-	}
-
 	//fmt.Printf("visitCount: %d\n", visitCount)
-	shortestPathSteps = len(shortestPath)
 
 	return shortestPathSteps, shortestPath, shortestPathDir
 }
