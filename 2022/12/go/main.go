@@ -15,21 +15,19 @@ func (c coord) move(delta coord) coord {
 var neighborsPos = []coord{{-1, 0}, {0, -1}, {1, 0}, {0, 1}}
 
 type Node struct {
-	id      int
-	pos     coord
-	label   string
-	value   rune
-	visited bool
-	isStart bool
-	isEnd   bool
+	id    int
+	pos   coord
+	label string
+	value rune
 }
 
+var height = 0
+var width = 0
 var nodes = make([]*Node, 0)
 var nodesByCoord = make(map[coord]*Node, 0)
 var maxSteps = 0
 
-func a() int {
-	heightMap := make([][]string, 0)
+func main() {
 	//scanner := common.GetLineScanner("../sample.txt")
 	scanner := common.GetLineScanner("../input.txt")
 
@@ -37,159 +35,122 @@ func a() int {
 	for scanner.Scan() {
 		l := strings.Split(scanner.Text(), "")
 
-		row := make([]string, 0)
-		for _, char := range l {
-
+		for x, char := range l {
 			node := Node{
 				id:    len(nodes),
-				pos:   coord{len(row), len(heightMap)},
+				pos:   coord{x, height},
 				label: char,
 				value: []rune(char)[0],
 			}
-
 			if char == "E" {
 				endNodeId = node.id
 				node.value = 'z'
-				//node.value = 'd'
-				node.isEnd = true
 			}
 			if char == "S" {
 				startNodeId = node.id
 				node.value = 'a'
-				node.isStart = true
 			}
 			nodes = append(nodes, &node)
 			nodesByCoord[node.pos] = &node
-
-			row = append(row, char)
 		}
-		heightMap = append(heightMap, row)
+		height++
 	}
-	maxSteps = len(heightMap) * len(heightMap[0])
+	maxSteps = len(nodes)
+	width = maxSteps / height
 
-	shortestPathSteps, shortestPath, shortestPathDir := findPath(nodes[endNodeId], nodes[startNodeId])
+	shortestPathToS, shortestPathToSDir, shortestPathToA, shortestPathToADir := findPath(nodes[endNodeId], nodes[startNodeId])
 
-	fmt.Printf("shortestPath: %d, shortestPathDir: %d\n", len(shortestPath), len(shortestPathDir))
-	printPathOnMap(heightMap, shortestPath, shortestPathDir)
+	printPathOnMap(height, width, shortestPathToS, shortestPathToSDir)
+	printPathOnMap(height, width, shortestPathToA, shortestPathToADir)
 
-	return shortestPathSteps
+	fmt.Printf("Part1: %d\n", len(shortestPathToS))
+	fmt.Printf("Part2: %d\n", len(shortestPathToA))
 }
 
-func findPath(start, end *Node) (int, []*Node, []int) {
+func findPath(start, end *Node) ([]*Node, []int, []*Node, []int) {
+	var shortestPathToS []*Node
+	var shortestPathToSDir []int // Only required for nice path rendering.
 	var shortestPath []*Node
-	var shortestPathDir []int
+	var shortestPathDir []int // Only required for nice path rendering.
 	shortestPathSteps := maxSteps
 
 	queue := make([]*Node, 0)
 	var currentNode *Node
+
+	// Initialize distance to some large value. We use max steps in this case.
 	distance := make(map[int]int, 0)
 	for _, node := range nodes {
 		distance[node.id] = maxSteps
 	}
 	parent := make(map[int]*Node, 0)
-	directionTo := make(map[int]int, 0)
-
-	//printParents := func() {
-	//	for id, node := range parent {
-	//		fmt.Printf("%d > %d, ", node.id, id)
-	//	}
-	//	fmt.Printf("%d parents found.\n", len(parent))
-	//}
+	directionTo := make(map[int]int, 0) // Only required for nice path rendering.
 
 	getPath := func(endNode *Node) ([]*Node, []int) {
 		var path []*Node
 		var pathDir []int
-
-		currentNode = endNode
-		for {
-			//fmt.Printf("Looking for parent of %d\n", currentNode.id)
-			if parentNode, exists := parent[currentNode.id]; exists {
-				//fmt.Printf("%d > %d\n", parentNode.id, currentNode.id)
-				path = append([]*Node{parentNode}, path...)
-				pathDir = append([]int{directionTo[currentNode.id]}, pathDir...)
-				currentNode = parentNode
-			} else {
-				//fmt.Printf("?? > %d\n", currentNode.id)
-				break
-			}
+		for parentNode := parent[endNode.id]; parentNode != nil; parentNode = parent[parentNode.id] {
+			path = append([]*Node{parentNode}, path...)
+			pathDir = append([]int{directionTo[parentNode.id]}, pathDir...)
 		}
 		return path, pathDir
 	}
 
-	checkPath := func(endNode *Node) {
-		path, pathDir := getPath(endNode)
-		fmt.Printf("path: %v\n", path)
+	checkPath := func(node *Node) {
+		path, pathDir := getPath(node)
+
+		// Keep answer for part 1.
+		if node.id == end.id {
+			shortestPathToS = path
+			shortestPathToSDir = pathDir // Only required for nice path rendering.
+		}
+
+		// Continue for part 2.
 		if len(path) >= shortestPathSteps {
 			return
 		}
 		shortestPath = path
-		shortestPathDir = pathDir
+		shortestPathDir = pathDir // Only required for nice path rendering.
 		shortestPathSteps = len(path)
 	}
-
-	visitCount := 0
 
 	queue = append(queue, start)
 	distance[start.id] = 0
 
-	for {
-		//fmt.Printf("Queue length: %d\n", len(queue))
-		if len(queue) == 0 {
-			//fmt.Printf("Finished queue!\n")
-			break
-		}
-		visitCount++
-
+	for len(queue) > 0 {
 		currentNode = queue[0]
-		//fmt.Printf("Visiting: %v %s\n", currentNode.pos, currentNode.label)
-
-		//if currentNode.id == end.id {
-		//	fmt.Printf("currentNode.value: %v\n", currentNode.value)
-		//	//fmt.Printf("Reached end!\n")
-		//	checkPath()
-		//	break
-		//}
-
 		if currentNode.value == 'a' {
-			//fmt.Printf("Reached an 'a'!\n")
 			checkPath(currentNode)
-			break
+			// We can technically break if we are only interested in part 1.
+			//break
 		}
 
+		// Dequeue first item.
 		queue = queue[1:]
-		//printQueue("After popping", queue)
 
+		// Check neighbours.
 		for d, move := range neighborsPos {
-			neighbourCoord := currentNode.pos.move(move)
-			neighbour, nodeExists := nodesByCoord[neighbourCoord]
+			// Check if node exists on map.
+			neighbour, nodeExists := nodesByCoord[currentNode.pos.move(move)]
 			if !nodeExists {
-				//fmt.Printf("%s  neighbour at %v does not exist.\n", depth, neighbourCoord)
 				continue
 			}
 
-			// Check if reachable
-			diff := currentNode.value - neighbour.value
-			if diff > 1 {
-				// Cannot reach
+			// Check if neighbour can be reached.
+			// Take note the logic is reversed as we're going from End to start.
+			if diff := currentNode.value - neighbour.value; diff > 1 {
 				continue
 			}
 
 			cost := distance[currentNode.id] + 1
-
 			if cost < distance[neighbour.id] {
 				distance[neighbour.id] = cost
 				queue = append(queue, neighbour)
 				parent[neighbour.id] = currentNode
-				directionTo[neighbour.id] = d
-				//printParents()
+				directionTo[neighbour.id] = d // Only required for nice path rendering.
 			}
 		}
-		//printQueue("After queuing", queue)
 	}
-	//printParents()
-	//fmt.Printf("visitCount: %d\n", visitCount)
-
-	return shortestPathSteps, shortestPath, shortestPathDir
+	return shortestPathToS, shortestPathToSDir, shortestPath, shortestPathDir
 }
 
 func printPath(path []*Node) {
@@ -200,26 +161,21 @@ func printPath(path []*Node) {
 	fmt.Printf("\n")
 }
 
-//var dirChar = []string{">", "V", "<", "^"}
-
 var dirChar = []string{"<", "^", ">", "v"}
 
-func printPathOnMap(heightMap [][]string, path []*Node, pathDir []int) {
+func printPathOnMap(height, width int, path []*Node, pathDir []int) {
 	fmt.Printf("\n\n=== Path ===\n")
-	printPath(path)
+	//printPath(path)
 
 	var mapWithPath [][]string
-	for y := 0; y < len(heightMap); y++ {
+	for y := 0; y < height; y++ {
 		row := make([]string, 0)
-		for x := 0; x < len(heightMap[0]); x++ {
+		for x := 0; x < width; x++ {
 			row = append(row, ".")
 		}
 		mapWithPath = append(mapWithPath, row)
 	}
-	fmt.Printf("\nlen(path)=%d, len(pathDir)=%d\n\n", len(path), len(pathDir))
 	for i, node := range path {
-		//fmt.Printf("node.pos: %v, pathDir[i]: %v\n", node.pos, pathDir[i])
-		//mapWithPath[node.pos[1]][node.pos[0]] = "#"
 		if pathDir[i] != -1 {
 			mapWithPath[node.pos[1]][node.pos[0]] = dirChar[pathDir[i]]
 		} else {
@@ -237,18 +193,4 @@ func printMap(mapArray [][]string) {
 		}
 		fmt.Printf("\n")
 	}
-}
-
-func printQueue(label string, queue []*Node) {
-	//fmt.Printf("queue: %v\n", queue)
-	fmt.Printf("%s: %d in queue: ", label, len(queue))
-	for _, node := range queue {
-		fmt.Printf("-> %v (%s)", node.pos, node.label)
-	}
-	fmt.Printf("\n")
-}
-
-func main() {
-	part1 := a()
-	fmt.Printf("Part1: %d\n", part1)
 }
