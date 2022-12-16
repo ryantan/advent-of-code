@@ -19,15 +19,17 @@ func newCoord(s string) *coord {
 type Sand struct {
 	pos          coord
 	lowestRockY  int
+	floor        int
 	rocks        []*coord
 	stuffByCoord map[coord]bool
 }
 
 // newSand produces sand at 500, 0
-func newSand(rocks []*coord, stuffByCoord map[coord]bool, maxY int) *Sand {
+func newSand(rocks []*coord, stuffByCoord map[coord]bool, maxY int, floor int) *Sand {
 	sand := Sand{
 		pos:          coord{500, 0},
 		lowestRockY:  maxY,
+		floor:        floor,
 		rocks:        rocks,
 		stuffByCoord: stuffByCoord,
 	}
@@ -41,10 +43,12 @@ func (s *Sand) drop() (bool, bool) {
 		return false, true
 	}
 	oldPos := s.pos
-	fmt.Printf("Original pos: %v\n", s.pos)
+	//fmt.Printf("Original pos: %v\n", s.pos)
 	s.pos[1]++
 
-	if s.stuffByCoord[s.pos] {
+	if s.pos[1] >= s.floor {
+		s.pos[1]--
+	} else if s.stuffByCoord[s.pos] {
 		// Something is below s.
 
 		// Try left down.
@@ -68,18 +72,19 @@ func (s *Sand) drop() (bool, bool) {
 		// Can go down.
 	}
 
-	if oldPos == s.pos {
-		// Didn't move? Settled!
-		return false, false
-	}
-
+	lost := false
 	// Went pass lowest rock? Lost!
 	if s.pos[1] >= s.lowestRockY {
-		return false, true
+		lost = true
+	}
+
+	if oldPos == s.pos {
+		// Didn't move? Settled!
+		return false, lost
 	}
 
 	// Moved!
-	return true, false
+	return true, lost
 }
 
 func main() {
@@ -134,25 +139,28 @@ func main() {
 		stuffByCoord[*rock] = true
 	}
 
+	part1 := 0
 	sand := make([]coord, 0)
-	lostCount := 0
-	for lostCount == 0 {
-		s := newSand(rocks, stuffByCoord, maxY)
-		for j := 0; j < maxY; j++ {
+	for {
+		s := newSand(rocks, stuffByCoord, maxY, maxY+2)
+		for j := 0; j < maxY+2; j++ {
 			canMove, lost := s.drop()
 			if !canMove {
-				if !lost {
-					sand = append(sand, s.pos)
-					s.stuffByCoord[s.pos] = true
-				} else {
-					lostCount++
+				if lost && part1 == 0 {
+					part1 = len(sand)
 				}
+				sand = append(sand, s.pos)
+				stuffByCoord[s.pos] = true
 				break
 			}
 		}
+		if s.stuffByCoord[coord{500, 0}] {
+			break
+		}
 	}
 	//fmt.Printf("lostCount: %d\n", lostCount)
-	fmt.Printf("Part 1: %d\n", len(sand))
+	fmt.Printf("Part 1: %d\n", part1)
+	fmt.Printf("Part 2: %d\n", len(sand))
 
 	printMap(rocks, sand, minX, maxX, maxY)
 }
@@ -166,6 +174,17 @@ func main() {
 
 func printMap(rocks []*coord, sand []coord, minX, maxX, maxY int) {
 	var grid [][]string
+
+	// Expand min max X with sand.
+	for _, s := range sand {
+		if s[0] > maxX {
+			maxX = s[0]
+		}
+		if s[0] < minX {
+			minX = s[0]
+		}
+	}
+	minX, maxX = minX-2, maxX+2
 
 	// Fill grid with air.
 	for y := 0; y <= maxY; y++ {
