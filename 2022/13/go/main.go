@@ -43,9 +43,7 @@ func (p *Packet) convertToList() {
 
 func (p *Packet) pop() int {
 	lastElement := p.stack[len(p.stack)-1]
-	//fmt.Printf("p.stack before pop: %v\n", p.stack)
 	p.stack = p.stack[:len(p.stack)-1]
-	//fmt.Printf("p.stack after pop: %v\n", p.stack)
 	return lastElement
 }
 
@@ -57,12 +55,6 @@ func (p *Packet) reset() {
 	p.currentElement = 0
 }
 func (p *Packet) readNext() bool {
-	if p.stack != nil {
-		// Non-first read
-		//p.head++
-		// Don't advance for first read.
-	}
-
 	if p.head >= len(p.content) {
 		// No more.
 		return false
@@ -79,14 +71,6 @@ func (p *Packet) readNext() bool {
 		p.pop()
 		p.depth--
 		p.head++
-		//// Attempt to read next comma if there is one.
-		//// TODO: Consider ignoring comma on next read instead of doing it at end of read.
-		//if p.head < len(p.content) {
-		//	nextChar := p.content[p.head]
-		//	if nextChar == ',' {
-		//		p.head++
-		//	}
-		//}
 	} else {
 		if c == ',' {
 			// Ignore
@@ -105,10 +89,7 @@ func (p *Packet) readNext() bool {
 					break
 				}
 				nextChar := p.content[p.head]
-				if nextChar == ']' {
-					break
-				} else if nextChar == ',' {
-					//p.head++
+				if nextChar == ']' || nextChar == ',' {
 					break
 				}
 				number = append(number, nextChar)
@@ -117,7 +98,6 @@ func (p *Packet) readNext() bool {
 
 			element, err := strconv.Atoi(string(number))
 			if err != nil {
-				fmt.Printf("Could not parse %s\n", string(number))
 				panic("Could not parse number")
 			}
 			p.currentElement = element
@@ -208,35 +188,32 @@ func main() {
 	//scanner := common.GetLineScanner("../sample2.txt")
 	scanner := common.GetLineScanner("../input.txt")
 
-	currentPairIndex := 1
-	sum := 0
+	packets := make([]*Packet, 0)
 	for scanner.Scan() {
-		fmt.Printf("\n===== Pair %d:\n", currentPairIndex)
 		l1 := []rune(scanner.Text())
-		scanner.Scan()
-		l2 := []rune(scanner.Text())
-
-		packet1 := &Packet{
+		if len(l1) == 0 {
+			continue
+		}
+		packet := &Packet{
 			originalContent: l1,
 			content:         l1,
 		}
-		packet2 := &Packet{
-			originalContent: l2,
-			content:         l2,
-		}
-		//fmt.Println(string(l1))
-		//fmt.Println(string(l2))
+		packets = append(packets, packet)
+	}
 
-		if correctOrder := packet1.compare(packet2); correctOrder {
+	sum := 0
+	for i := 0; i < len(packets)/2; i++ {
+		fmt.Printf("\n===== Pair %d:\n", i)
+		fmt.Println(string(packets[i*2].originalContent))
+		fmt.Println(string(packets[i*2+1].originalContent))
+
+		if correctOrder := packets[i*2].compare(packets[i*2+1]); correctOrder {
 			fmt.Printf("Correct order!\n\n")
-			sum += currentPairIndex
+			sum += i + 1
 		} else {
 			fmt.Printf("Wrong order!\n\n")
 		}
-		currentPairIndex++
-		scanner.Scan()
 	}
 
 	fmt.Printf("Part 1: %d\n", sum)
-
 }
