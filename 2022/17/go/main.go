@@ -152,6 +152,8 @@ var collapseDirections = map[int][5]int{
 	434: {1, 2, 2, 3, 3},      // >>> // 62 + 2*62 + 4*62
 }
 
+const typesOfBlocks = 5
+
 var settledBlocks = settledBlockArray{}
 var lastGenerationHeight = 0
 var lastHighestY = 0
@@ -166,7 +168,15 @@ var prevPatternSeenIndex = 0
 var patternSeenCount = 0
 var patternLength = 0
 var heightDiffInPattenLength = 0
-var extrapolatedHeight float64
+var patternsToSkip = 0
+var highestYBeforeSkipping int
+
+// How many times we should see the patterns before we consider it the actual pattern.
+const minRepetitionOfPattern = 5
+
+// How many generations to skip before starting to check for patterns.
+// First few generations don't seem to be stable and are never part of patterns.
+const earliestPatternStartGeneration = 3
 
 func isAMatch(startIndex, testIndex, length int) bool {
 	matches := true
@@ -194,7 +204,8 @@ func main() {
 	windDirectionsCount := len(windDirections)
 	fmt.Printf("windDirectionsCount: %d\n", windDirectionsCount)
 
-	generationLength := 5 * windDirectionsCount
+	//generationLength := 1 * windDirectionsCount
+	generationLength := typesOfBlocks * windDirectionsCount
 	fmt.Printf("generationLength: %d\n", generationLength)
 
 	updateHighestY := func(minY int) {
@@ -210,17 +221,28 @@ func main() {
 	}
 
 	var part1Answer int
+	var part2Answer int
+	//maxBlocks := 3
+	//maxBlocks := 12
 	//maxBlocks := 2022
 	//maxBlocks := generationLength * 40
 	maxBlocks := 1_000_000_000_000
-	earliestPatternStartGeneration := 3
-	//earliestPatternStartGeneration := 100
-	//maxBlocks := 3
-	//maxBlocks := 12
 	start := time.Now()
+	blocksToSimulate := 0
 
 blockSpawnLoop:
 	for i := 0; i < maxBlocks; i++ {
+		// region Count down to finish simulation.
+		if patternsToSkip > 0 {
+
+			if blocksToSimulate == 0 {
+				part2Answer = highestY + 1 + patternsToSkip*heightDiffInPattenLength
+				break blockSpawnLoop
+			}
+			blocksToSimulate--
+		}
+		// endregion
+
 		startingY := highestY + 4
 		//fmt.Printf("startingY: %d, highestY: %d, len(settledBlocks): %d\n", startingY, highestY, len(settledBlocks))
 
@@ -231,15 +253,16 @@ blockSpawnLoop:
 
 		b := newBlock(i%5, startingY)
 
-		if i%1_000_000 == 0 {
+		// region Periodic timer
+		if i%1_000_000_000 == 0 {
 			//if i%1_000_000 == 0 {
 			fmt.Printf("%d: (%s) h=%d ah=%d\n", i, time.Since(start), len(settledBlocks), len(settledBlocksArchive))
 			start = time.Now()
 			//printSettledBlocks(settledBlocks, settledBlocksArchive, b)
 		}
+		// endregion
 
-		// Check next 3 wind directions if they can be collapsed.
-		//ahead := string(windDirections[windIndex%windDirectionsCount : (windIndex+3)%windDirectionsCount])
+		// region Optional optimization - Check next 3 wind directions if they can be collapsed.
 		ahead1 := windDirections[windIndex%windDirectionsCount]
 		ahead2 := windDirections[(windIndex+1)%windDirectionsCount]
 		ahead3 := windDirections[(windIndex+2)%windDirectionsCount]
@@ -248,7 +271,9 @@ blockSpawnLoop:
 		b.y -= 3
 		b.x += dX
 		windIndex += 3
+		// endregion
 
+		// Let wind blow till block is settled.
 		for {
 			//printSettledBlocks(settledBlocks, settledBlocksArchive, b)
 			windDirection := windDirections[windIndex%windDirectionsCount]
@@ -256,14 +281,10 @@ blockSpawnLoop:
 			if windDirection == '>' {
 				if b.canMoveRight() {
 					b.moveRight()
-				} else {
-					//fmt.Printf("Cannot move right\n")
 				}
 			} else if windDirection == '<' {
 				if b.canMoveLeft() {
 					b.moveLeft()
-				} else {
-					//fmt.Printf("Cannot move left\n")
 				}
 			}
 
@@ -276,11 +297,13 @@ blockSpawnLoop:
 				break
 			}
 		}
+
+		// Capture our answer for part 1.
 		if i == 2021 {
 			part1Answer = highestY + 1 + len(settledBlocksArchive)
 		}
 
-		if i%generationLength == 0 {
+		if i%generationLength == 0 && patternsToSkip == 0 {
 			generationHeight := highestY - lastHighestY
 			generationHeights = append(generationHeights, generationHeight)
 			lastHighestY = highestY
@@ -288,12 +311,14 @@ blockSpawnLoop:
 
 			// Find pattern. Which seems to start after 1~2 generations
 			if generation < earliestPatternStartGeneration {
-				// Wait for a few generation before pattern starts.
+				// Wait for a few generations before pattern starts.
 			} else if generation == earliestPatternStartGeneration {
+				// Define start of pattern.
 				patternStartIndex = generation
 				patternStartHeight = generationHeight
 				fmt.Printf("patternStartIndex: %d, patternStartHeight: %d\n", patternStartIndex, patternStartHeight)
 			} else if generationHeight == patternStartHeight && patternSeenCount == 0 {
+				// We see the start of pattern again.
 				if patternSeenIndex == 0 {
 					patternSeenIndex = generation
 					patternLength = patternSeenIndex - patternStartIndex
@@ -346,73 +371,50 @@ blockSpawnLoop:
 					patternSeenCount = 0
 					patternLength = 0
 				}
-				if patternSeenCount >= 5 {
-					// Pretty confident we have found the patten.
-					// Extrapolate results now.
-					blocksLeftToSimulate := maxBlocks - i
-					fmt.Printf("blocksLeftToSimulate: %d\n", blocksLeftToSimulate)
-					fmt.Printf("generationLength: %d\n", generationLength)
-					currentHeight := highestY + 1
-					fmt.Printf("currentHeight: %d\n", currentHeight)
-					fmt.Printf("heightDiffInPattenLength: %d\n", heightDiffInPattenLength)
-					generationsLeftToSimulate := float64(blocksLeftToSimulate) / float64(generationLength)
-					fmt.Printf("generationsLeftToSimulate: %f\n", generationsLeftToSimulate)
-					fmt.Printf("patternLength: %d\n", patternLength)
-					patternsLeftToSimulate := float64(generationsLeftToSimulate) / float64(patternLength)
-					fmt.Printf("patternsLeftToSimulate: %f\n", patternsLeftToSimulate)
-					extrapolatedHeight = float64(highestY) + (patternsLeftToSimulate * float64(heightDiffInPattenLength))
-					fmt.Printf("extrapolatedHeight: %f\n", extrapolatedHeight)
 
-					// Wait till we get answer for part 1.
-					if i >= 2022 {
-						break blockSpawnLoop
+				if patternSeenCount < minRepetitionOfPattern {
+					fmt.Printf("Waiting for more patterns to be seen.\n")
+				} else {
+					// Pretty confident we have found the patten.
+					// But wait till we get answer for part 1.
+					if i < 2022 {
+						fmt.Printf("Continue for part 1 for now.\n")
+					} else {
+						fmt.Printf("i: %d\n", i)
+						blocksLeft := maxBlocks - i - 1
+						fmt.Printf("blocksLeft: %d\n", blocksLeft)
+						fmt.Printf("patternLength: %d\n", patternLength)
+						fmt.Printf("generationLength: %d\n", generationLength)
+						fmt.Printf("heightDiffInPattenLength: %d\n", heightDiffInPattenLength)
+						highestYBeforeSkipping = highestY
+						fmt.Printf("highestYBeforeSkipping: %d\n", highestYBeforeSkipping)
+
+						// If we're lucky, we don't need to simulate any remaining blocks when blocksToSimulate=0.
+						blocksToSimulate = blocksLeft % (generationLength * patternLength)
+						fmt.Printf("blocksToSimulate: %d\n", blocksToSimulate)
+
+						blocksToSkip := blocksLeft - blocksToSimulate
+						fmt.Printf("blocksToSkip: %d\n", blocksToSkip)
+
+						patternsToSkip = blocksToSkip / generationLength / patternLength
+						fmt.Printf("patternsToSkip: %d\n", patternsToSkip)
 					}
-					fmt.Printf("=== Continuing for part 1\n")
 				}
 			}
 
 			lastGenerationHeight = generationHeight
 			generation++
 		}
-
-		// Settled.
-
-		//if i%1000 == 0 {
-		//	//archiveStart := time.Now()
-		//	unbrokenLineY := 0
-		//	// Check if there's an unbroken line formed, if yes, ignore
-		//	// them in subsequent simulations.
-		//	// Only look around y + height of b.
-		//	for j := len(settledBlocks) - 2; j > 0; j-- {
-		//		hasUnbrokenLine := true
-		//
-		//		//fmt.Printf("settledBlocks[j]: %v\n", settledBlocks[j])
-		//		// Check 2 rows at once.
-		//		for k := 0; k < 7; k++ {
-		//			if !settledBlocks[j][k] && !settledBlocks[j+1][k] {
-		//				hasUnbrokenLine = false
-		//				break
-		//			}
-		//		}
-		//		if hasUnbrokenLine {
-		//			unbrokenLineY = j
-		//			break
-		//		}
-		//	}
-		//	if unbrokenLineY > 0 {
-		//		//fmt.Printf("unbrokenLineY: %d\n", unbrokenLineY)
-		//		// Move 0 to unbrokenLineY-1 into archive
-		//		toMove := settledBlocks[0:unbrokenLineY]
-		//		settledBlocksArchive = append(settledBlocksArchive, toMove...)
-		//		settledBlocks = settledBlocks[unbrokenLineY:]
-		//		updateHighestY(0)
-		//	}
-		//	//fmt.Printf("Archiving %d lines took: %s, new archive len=%d\n", unbrokenLineY, time.Since(archiveStart), len(settledBlocksArchive))
-		//}
-
 	}
+
+	fmt.Printf("Total time spent: %s\n", time.Since(start))
+
 	fmt.Printf("Part 1: %d\n", part1Answer)
-	fmt.Printf("Part 2: %f\n", extrapolatedHeight)
+	fmt.Printf("Part 2: %d\n", part2Answer)
+
+	// Wrong answers:
+	// 1540634005739 is too low.
+	// 1540634005740 is too low.
 }
 
 func printSettledBlocks(blocksOriginal settledBlockArray, archive settledBlockArray, b *block) {
