@@ -54,6 +54,10 @@ type State struct {
 	geodeRobot    int
 }
 
+//func (s State) score() int {
+//	return (s.geode * 10000) + (s.geodeRobot * 1000) + (s.obsidian * 100) + (s.obsidianRobot * 10) + (s.clayRobot * 5) + (s.clay * 5) + s.ore + s.oreRobot
+//}
+
 func (s State) isBetter(otherState State) bool {
 	//return s.ore > otherState.ore && s.oreRobot > otherState.oreRobot && s.clay > otherState.clay && s.clayRobot > otherState.clayRobot && s.obsidian > otherState.obsidian && s.obsidianRobot > otherState.obsidianRobot && s.geode > otherState.geode && s.geodeRobot > otherState.geodeRobot
 	return s.oreRobot > otherState.oreRobot && s.clayRobot > otherState.clayRobot && s.obsidianRobot > otherState.obsidianRobot && s.geodeRobot > otherState.geodeRobot
@@ -104,15 +108,42 @@ func (s State) buildGeodeRobot(bluePrint *BluePrint) State {
 }
 
 type Node struct {
-	id       int
-	parent   *Node
-	action   int
-	time     int
-	state    State
-	children map[int]*Node
+	bluePrint *BluePrint
+	parent    *Node
+	action    int
+	maxTime   int
+	time      int
+	state     State
+	children  map[int]*Node
 }
 
-//var endNodes = make([]*Node, 0)
+func (n *Node) score() int {
+	timeLeft := n.maxTime - n.time
+	geode := n.state.geode + (n.state.geodeRobot * timeLeft)
+	//obsidian := n.state.obsidian + (n.bluePrint.obsidianForGeodeRobot * n.state.obsidianRobot)) * 1000
+	obsidian := n.state.obsidian + (n.state.obsidianRobot * timeLeft)
+	//clay := (n.state.clay + (n.bluePrint.clayForObsidianRobot * n.state.obsidianRobot)
+	clay := n.state.clay + (n.state.clayRobot * timeLeft)
+	//ore := n.state.ore + (n.state.oreRobot * timeLeft)
+	//return (geode * 1000000) +
+	//	(n.state.geodeRobot * 100000) +
+	//	(obsidian * 10000) +
+	//	(n.state.obsidianRobot * 1000) +
+	//	(clay * 100) +
+	//	(n.state.clayRobot * 10) +
+	//	ore +
+	//	(n.state.oreRobot)
+	//return (geode * 1000000) +
+	//	//(n.state.geodeRobot * 100000) +
+	//	(obsidian * 10000) +
+	//	//(n.state.obsidianRobot * 1000) +
+	//	(clay * 100) +
+	//	//(n.state.clayRobot * 10) +
+	//	ore
+	return (geode * 1000000) +
+		(obsidian * 10000) +
+		(clay * 100)
+}
 
 func enoughTimeToBuildObsidianRobot(timeLeft int, state State, bluePrint *BluePrint) bool {
 	if timeLeft <= 0 {
@@ -173,150 +204,18 @@ func stateIsViableWithBluePrint(state State, timeLeft int, bluePrint *BluePrint)
 	return true
 }
 
-//func expandNode(parent *Node, bluePrint *BluePrint, nodeId *int, maxTime int) {
-//
-//	newTime := parent.time + 1
-//
-//	addNode := func(action int, state State) {
-//		newNode := &Node{
-//			id:       *nodeId,
-//			action:   action,
-//			parent:   parent,
-//			state:    state,
-//			time:     newTime,
-//			children: map[int]*Node{},
-//		}
-//		*nodeId++
-//		nodesEvaluated++
-//		if _, exists := nodesByTime[newTime]; !exists {
-//			nodesByTime[newTime] = 1
-//		} else {
-//			nodesByTime[newTime]++
-//		}
-//
-//		// If this timing was beaten before, kill this branch.
-//		if earliestTimeForState, exists := earliestTimesForState[state]; exists {
-//			foundInEarliestTimesForState++
-//			if newTime >= earliestTimeForState.time {
-//				aborted++
-//				return
-//			} else {
-//				// Replace
-//				nodeIdsToAbort[earliestTimeForState.id] = true
-//				earliestTimesForState[state] = timeAndId{time: newTime, id: newNode.id}
-//			}
-//		} else {
-//			earliestTimesForState[state] = timeAndId{time: newTime, id: newNode.id}
-//		}
-//
-//		if oldCount, exists := statesSeen[state]; exists {
-//			statesSeen[state] = oldCount + 1
-//		} else {
-//			statesSeen[state] = 1
-//			distinctStatesSeen++
-//		}
-//
-//		if _, exists := statesSeenByTime[newTime]; !exists {
-//			statesSeenByTime[newTime] = map[State]int{}
-//		}
-//		if _, exists := statesSeenByTime[newTime][state]; exists {
-//			statesSeenByTime[newTime][state]++
-//		} else {
-//			statesSeenByTime[newTime][state] = 1
-//		}
-//		if _, exists := distinctStatesSeenByTime[newTime]; exists {
-//			distinctStatesSeenByTime[newTime]++
-//		} else {
-//			distinctStatesSeenByTime[newTime] = 1
-//		}
-//
-//		if newTime == maxTime {
-//			fmt.Printf("endNodes length: %d\n", len(endNodes))
-//			endNodes = append(endNodes, newNode)
-//		} else {
-//			expandNode(newNode, bluePrint, nodeId, maxTime)
-//		}
-//		fmt.Printf("newNode (%d): %+v\n", *nodeId, newNode)
-//		parent.children[newNode.action] = newNode
-//	}
-//
-//	timeLeft := maxTime - newTime
-//
-//	if !stateIsViableWithBluePrint(parent.state, timeLeft, bluePrint) {
-//		return
-//	}
-//
-//	// Collect resources
-//	state := parent.state
-//	state.ore += parent.state.oreRobot
-//	state.clay += parent.state.clayRobot
-//	state.obsidian += parent.state.obsidianRobot
-//	state.geode += parent.state.geodeRobot
-//
-//	// When there's only 1 logical option.
-//	if parent.state.obsidianRobot == 0 && parent.state.ore >= bluePrint.oreForObsidianRobot && parent.state.clay >= bluePrint.clayForObsidianRobot {
-//		addNode(3, state.buildObsidianRobot(bluePrint))
-//		return
-//	}
-//
-//	// When there's only 1 logical option.
-//	if parent.state.geodeRobot == 0 && parent.state.ore >= bluePrint.oreForGeodeRobot && parent.state.obsidian >= bluePrint.obsidianForGeodeRobot {
-//		addNode(3, state.buildGeodeRobot(bluePrint))
-//		return
-//	}
-//
-//	// When there's only 1 logical option.
-//	if parent.state.clayRobot == 0 && parent.state.ore >= bluePrint.oreForClayRobot {
-//		addNode(3, state.buildClayRobot(bluePrint))
-//		return
-//	}
-//
-//	func() {
-//		addNode(0, state)
-//	}()
-//
-//	// Last step should always be collection, not building.
-//	// Because there's no point to build anymore.
-//	if timeLeft == 0 {
-//		// Skip any building.
-//		return
-//	}
-//
-//	if parent.state.ore >= bluePrint.oreForOreRobot {
-//		if !parent.state.tooMuchOre(timeLeft, bluePrint) {
-//			addNode(1, state.buildOreRobot(bluePrint))
-//		}
-//	}
-//	if maxTime-parent.time > 3 && parent.state.ore >= bluePrint.oreForClayRobot {
-//		if !parent.state.tooMuchClay(timeLeft, bluePrint) {
-//			addNode(3, state.buildClayRobot(bluePrint))
-//		}
-//	}
-//	if parent.state.ore >= bluePrint.oreForObsidianRobot && parent.state.clay >= bluePrint.clayForObsidianRobot {
-//		if !parent.state.tooMuchObsidian(timeLeft, bluePrint) {
-//			addNode(3, state.buildObsidianRobot(bluePrint))
-//		}
-//	}
-//	if parent.state.ore >= bluePrint.oreForGeodeRobot && parent.state.obsidian >= bluePrint.obsidianForGeodeRobot {
-//		func() {
-//			addNode(4, state.buildGeodeRobot(bluePrint))
-//		}()
-//	}
-//
-//	//fmt.Printf("parent.children: %+v\n", parent.children)
-//}
-
 func findMaxGeodes(l string) int {
 	start := time.Now()
 
 	var maxTime = 24
-	//var nodeId = 1
+	//maxTime = 32
 	var queue = make([]*Node, 0)
 
 	bluePrint := newBluePrint(l)
 
 	root := Node{
-		id: 0,
+		bluePrint: bluePrint,
+		maxTime:   maxTime,
 		state: State{
 			oreRobot: 1,
 		},
@@ -335,12 +234,13 @@ func findMaxGeodes(l string) int {
 
 	addNode := func(action int, state State, parent *Node, newTime int) {
 		newNode := &Node{
-			id:       0,
-			action:   action,
-			parent:   parent,
-			state:    state,
-			time:     newTime,
-			children: map[int]*Node{},
+			bluePrint: bluePrint,
+			action:    action,
+			parent:    parent,
+			state:     state,
+			maxTime:   maxTime,
+			time:      newTime,
+			children:  map[int]*Node{},
 		}
 		nodesEvaluated++
 
@@ -370,23 +270,114 @@ func findMaxGeodes(l string) int {
 
 	maxGeodeRobotsOnLastRound := 0
 
-	//currentProcessingTime := 0
-	//startForThisTime := time.Now()
+	currentProcessingTime := 0
+	startForThisTime := time.Now()
 	for len(queue) > 0 {
 		currentNode = queue[0]
+
+		newTime := currentNode.time + 1
+
+		// If we want to log processing duration per time left.
+		if newTime > currentProcessingTime {
+			fmt.Printf("last processing time: %s for %d\n", time.Since(startForThisTime), currentProcessingTime)
+			currentProcessingTime = newTime
+			startForThisTime = time.Now()
+
+			if currentProcessingTime > 14 {
+
+				if len(queue) > 0 {
+					//// Check if there are nodes with diff time.
+					//testTime := queue[0].time
+					//nodesThatHaveDiffTime := 0
+					//for _, n := range queue {
+					//	if n.time != testTime {
+					//		nodesThatHaveDiffTime++
+					//	}
+					//}
+					//fmt.Printf("nodesThatHaveDiffTime: %d\n", nodesThatHaveDiffTime)
+					//if nodesThatHaveDiffTime > 0 {
+					//	fmt.Printf("Some nodes have different time!\n")
+					//}
+
+					if len(queue) > 6000 {
+
+						// Get distinct nodes
+						stateHashed := map[State]int{}
+						var distinctQueue []*Node
+						for _, node := range queue {
+							if _, exists := stateHashed[node.state]; !exists {
+								distinctQueue = append(distinctQueue, node)
+								stateHashed[node.state] = 0
+							}
+							stateHashed[node.state]++
+						}
+
+						for state, count := range stateHashed {
+							if count > 1 {
+								fmt.Printf("at %d: %d nodes has same state: %+v\n", newTime, count, state)
+							}
+						}
+
+						if len(distinctQueue) != len(queue) {
+							fmt.Printf("queue is %d while distinctQueue is %d\n", len(queue), len(distinctQueue))
+						}
+
+						//// Sort by node score.
+						//for i := 0; i < len(queue)-1; i++ {
+						//	for j := 0; j < len(queue)-i-1; j++ {
+						//		if queue[j].score() < queue[j+1].score() {
+						//			queue[j], queue[j+1] = queue[j+1], queue[j]
+						//		}
+						//	}
+						//}
+
+						//statesWithSameScores := map[int][]State{}
+						//for _, node := range queue {
+						//	score := node.score()
+						//	if _, exists := statesWithSameScores[score]; !exists {
+						//		statesWithSameScores[score] = []State{}
+						//	}
+						//	statesWithSameScores[score] = append(statesWithSameScores[score], node.state)
+						//}
+
+						//for score, states := range statesWithSameScores {
+						//	if len(states) > 2 {
+						//		for _, state := range states {
+						//			fmt.Printf("at %d: %d nodes score %d: %+v\n", newTime, len(states), score, state)
+						//		}
+						//	}
+						//}
+
+						//queue = distinctQueue
+
+						// Sort by node score.
+						for i := 0; i < len(queue)-1; i++ {
+							for j := 0; j < len(queue)-i-1; j++ {
+								if queue[j].score() < queue[j+1].score() {
+									queue[j], queue[j+1] = queue[j+1], queue[j]
+								}
+							}
+						}
+
+						//// Check scores.
+						//if len(queue) > 20000 {
+						//	for i := 0; i < 20; i++ {
+						//		fmt.Printf("score of state #%d: %d\n", i, queue[i].score())
+						//	}
+						//}
+
+						// Keep only top 1000 nodes.
+						if len(queue) > 3000 {
+							queue = queue[:3000]
+						}
+					}
+				}
+			}
+		}
 
 		// Dequeue first item.
 		//fmt.Printf("Deqeued 1 node\n")
 		queue = queue[1:]
-
-		newTime := currentNode.time + 1
-
-		//// If we want to log processing duration per time left.
-		//if newTime > currentProcessingTime {
-		//	fmt.Printf("last processing time: %s for %d\n", time.Since(startForThisTime), currentProcessingTime)
-		//	currentProcessingTime = newTime
-		//	startForThisTime = time.Now()
-		//}
 
 		if currentNode.time == maxTime {
 			endNodes = append(endNodes, currentNode)
@@ -520,7 +511,8 @@ func findMaxGeodes(l string) int {
 		}
 		//fmt.Printf("endNodesByState: %+v\n", endNodesByState)
 
-		printChain(nodeWithMaxGeode)
+		fmt.Printf("nodeWithMaxGeode: %+v\n", nodeWithMaxGeode)
+		//printChain(nodeWithMaxGeode)
 
 		//for i, node := range endNodes {
 		//	fmt.Printf("Endnode %d state: %+v\n", i, node.state)
@@ -575,7 +567,7 @@ func main() {
 		geodes := findMaxGeodes(l)
 		fmt.Printf("######## Blue print %d makes %d geodes\n", bluePrintId, geodes)
 		totalQualityLevel += bluePrintId * geodes
-		//if bluePrintId == 1 {
+		//if bluePrintId == 3 {
 		//	break
 		//}
 		bluePrintId++

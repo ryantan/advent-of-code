@@ -1,0 +1,291 @@
+Time taken: 333.345958ms
+endNodes length: 14
+aborted: 248188
+nodesEvaluated: 878505
+nodesByTime: map[1:1 2:1 3:2 4:3 5:7 6:11 7:24 8:41 9:88 10:159 11:320 12:586 13:1146 14:2319 15:4902 16:10684 17:23693 18:51824 19:58070 20:93183 21:166662 22:274753 23:14 24:14]
+foundInEarliestTimesForState: 189998
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 1 makes 9 geodes
+Time taken: 3.516479417s
+endNodes length: 18
+aborted: 2585112
+nodesEvaluated: 8444111
+nodesByTime: map[1:1 2:1 3:2 4:4 5:8 6:18 7:45 8:109 9:258 10:542 11:1108 12:2473 13:5857 14:14345 15:34793 16:81172 17:177029 18:364020 19:453243 20:817902 21:1540011 22:2726593 23:18 24:18]
+foundInEarliestTimesForState: 2224541
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 2 makes 12 geodes
+Part 1: 33
+➜  go git:(master) ✗ go run main.go
+Time taken: 6.882542ms
+endNodes length: 0
+aborted: 16233
+nodesEvaluated: 24099
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:317 14:621 15:1076 16:1961 17:3552 18:7250]
+foundInEarliestTimesForState: 8983
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 1 makes 0 geodes
+Time taken: 34.136333ms
+endNodes length: 0
+aborted: 82292
+nodesEvaluated: 121078
+nodesByTime: map[1:1 2:1 3:1 4:3 5:5 6:8 7:19 8:40 9:85 10:198 11:409 12:781 13:1436 14:2493 15:4331 16:8334 17:16690 18:34115 19:1565 20:1786 21:3031]
+foundInEarliestTimesForState: 45746
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 2 makes 0 geodes
+Time taken: 5.174083ms
+endNodes length: 0
+aborted: 22791
+nodesEvaluated: 32967
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:319 14:631 15:1149 16:2458 17:5277 18:12129 19:1 20:1 21:1]
+foundInEarliestTimesForState: 10662
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 3 makes 0 geodes
+Time taken: 8.476625ms
+endNodes length: 0
+aborted: 25932
+nodesEvaluated: 38465
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:75 11:158 12:297 13:554 14:1027 15:1778 16:3027 17:5530 18:10693]
+foundInEarliestTimesForState: 15239
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 4 makes 0 geodes
+Time taken: 13.72925ms
+endNodes length: 0
+aborted: 46754
+nodesEvaluated: 68134
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:23 9:54 10:112 11:249 12:507 13:973 14:1727 15:2955 16:5071 17:9627 18:19118 19:24 20:24 21:48]
+foundInEarliestTimesForState: 27596
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 5 makes 0 geodes
+Time taken: 6.664208ms
+endNodes length: 1
+aborted: 20510
+nodesEvaluated: 32056
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:317 14:623 15:1097 16:2165 17:4489 18:9619 19:597 20:906 21:1441 22:572 23:1 24:1]
+foundInEarliestTimesForState: 9889
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 6 makes 2 geodes
+Time taken: 125.057958ms
+endNodes length: 2
+aborted: 296044
+nodesEvaluated: 419563
+nodesByTime: map[1:1 2:1 3:2 4:4 5:8 6:18 7:45 8:109 9:258 10:542 11:1048 12:1913 13:3378 14:6467 15:13255 16:27813 17:60169 18:125528 19:2792 20:4443 21:6461 22:165 23:2 24:2]
+foundInEarliestTimesForState: 165139
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 7 makes 2 geodes
+Time taken: 484.643ms
+endNodes length: 14
+aborted: 318608
+nodesEvaluated: 1219158
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:76 11:162 12:328 13:710 14:1617 15:3862 16:9412 17:22484 18:51904 19:71478 20:121707 21:233229 22:432284 23:14 24:14]
+foundInEarliestTimesForState: 269790
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 8 makes 11 geodes
+Time taken: 13.2055ms
+endNodes length: 0
+aborted: 55145
+nodesEvaluated: 79320
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:23 9:54 10:112 11:249 12:507 13:973 14:1727 15:3011 16:5721 17:11772 18:24697]
+foundInEarliestTimesForState: 30448
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 9 makes 0 geodes
+Time taken: 1.603986209s
+endNodes length: 19
+aborted: 1193585
+nodesEvaluated: 4419883
+nodesByTime: map[1:1 2:1 3:1 4:3 5:5 6:8 7:19 8:40 9:85 10:199 11:415 12:900 13:2094 14:5056 15:12732 16:30800 17:71068 18:155535 19:236985 20:428579 21:827920 22:1579454 23:19 24:19]
+foundInEarliestTimesForState: 1067945
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 10 makes 12 geodes
+Time taken: 3.717875ms
+endNodes length: 0
+aborted: 14661
+nodesEvaluated: 22176
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:317 14:621 15:1075 16:1933 17:3230 18:5779]
+foundInEarliestTimesForState: 8882
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 11 makes 0 geodes
+Time taken: 4.258791ms
+endNodes length: 0
+aborted: 15010
+nodesEvaluated: 22597
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:317 14:621 15:1075 16:1935 17:3300 18:6120]
+foundInEarliestTimesForState: 8890
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 12 makes 0 geodes
+Time taken: 9.474625ms
+endNodes length: 0
+aborted: 29651
+nodesEvaluated: 43536
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:75 11:158 12:297 13:554 14:1029 15:1800 16:3307 17:6556 18:13405 19:9 20:9 21:13]
+foundInEarliestTimesForState: 16237
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 13 makes 0 geodes
+Time taken: 8.116458ms
+endNodes length: 0
+aborted: 27773
+nodesEvaluated: 40955
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:75 11:158 12:297 13:554 14:1028 15:1785 16:3140 17:6058 18:12084]
+foundInEarliestTimesForState: 15689
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 14 makes 0 geodes
+Time taken: 7.447667ms
+endNodes length: 0
+aborted: 25830
+nodesEvaluated: 37080
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:320 14:651 15:1227 16:2724 17:5989 18:14235]
+foundInEarliestTimesForState: 11595
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 15 makes 0 geodes
+Time taken: 22.822834ms
+endNodes length: 4
+aborted: 47160
+nodesEvaluated: 82648
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:75 11:158 12:297 13:560 14:1065 15:2052 16:4298 17:9122 18:20168 19:4072 20:5799 21:8434 22:4464 23:4 24:4]
+foundInEarliestTimesForState: 21989
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 16 makes 3 geodes
+Time taken: 4.708416ms
+endNodes length: 0
+aborted: 14334
+nodesEvaluated: 21827
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:317 14:621 15:1075 16:1933 17:3208 18:5452]
+foundInEarliestTimesForState: 8882
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 17 makes 0 geodes
+Time taken: 37.494875ms
+endNodes length: 2
+aborted: 95318
+nodesEvaluated: 141548
+nodesByTime: map[1:1 2:1 3:1 4:3 5:5 6:8 7:19 8:40 9:85 10:198 11:409 12:781 13:1436 14:2509 15:4598 16:9201 17:18977 18:40024 19:2846 20:3906 21:5912 22:15 23:2 24:2]
+foundInEarliestTimesForState: 50569
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 18 makes 2 geodes
+Time taken: 20.369167ms
+endNodes length: 4
+aborted: 49906
+nodesEvaluated: 99073
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:75 11:158 12:297 13:560 14:1065 15:2052 16:4298 17:9122 18:20168 19:5690 20:8146 21:11684 22:10861 23:4 24:4]
+foundInEarliestTimesForState: 24802
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 19 makes 3 geodes
+Time taken: 632.706834ms
+endNodes length: 6
+aborted: 956354
+nodesEvaluated: 2054919
+nodesByTime: map[1:1 2:1 3:2 4:4 5:8 6:18 7:45 8:109 9:258 10:542 11:1048 12:2040 13:4386 14:9787 15:22498 16:51491 17:112990 18:237556 19:133275 20:191968 21:293519 22:350402 23:6 24:6]
+foundInEarliestTimesForState: 642959
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 20 makes 4 geodes
+Time taken: 10.449209ms
+endNodes length: 2
+aborted: 47120
+nodesEvaluated: 71861
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:23 9:54 10:112 11:249 12:507 13:973 14:1727 15:2955 16:4902 17:8802 18:17179 19:1330 20:2301 21:3568 22:190 23:2 24:2]
+foundInEarliestTimesForState: 26959
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 21 makes 2 geodes
+Time taken: 41.396209ms
+endNodes length: 2
+aborted: 142432
+nodesEvaluated: 211047
+nodesByTime: map[1:1 2:1 3:2 4:3 5:6 6:12 7:27 8:63 9:151 10:337 11:694 12:1319 13:2363 14:4020 15:7055 16:13710 17:27407 18:56527 19:4030 20:5678 21:8399 22:59 23:2 24:2]
+foundInEarliestTimesForState: 79179
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 22 makes 2 geodes
+Time taken: 60.185458ms
+endNodes length: 4
+aborted: 127119
+nodesEvaluated: 260129
+nodesByTime: map[1:1 2:1 3:1 4:3 5:5 6:8 7:19 8:40 9:85 10:198 11:409 12:781 13:1436 14:2509 15:4598 16:9201 17:18977 18:40024 19:17751 20:24583 21:37421 22:31034 23:4 24:4]
+foundInEarliestTimesForState: 71036
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 23 makes 3 geodes
+Time taken: 23.201208ms
+endNodes length: 0
+aborted: 75683
+nodesEvaluated: 110458
+nodesByTime: map[1:1 2:1 3:1 4:3 5:5 6:8 7:19 8:40 9:85 10:198 11:409 12:781 13:1436 14:2492 15:4231 16:7846 17:15571 18:31102 19:666 20:736 21:1225]
+foundInEarliestTimesForState: 43602
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 24 makes 0 geodes
+Time taken: 1.184129167s
+endNodes length: 11
+aborted: 1172245
+nodesEvaluated: 3338930
+nodesByTime: map[1:1 2:1 3:3 4:5 5:14 6:31 7:84 8:192 9:424 10:828 11:1554 12:2822 13:5652 14:11746 15:25106 16:54162 17:113740 18:229297 19:213082 20:329056 21:571636 22:871987 23:11 24:11]
+foundInEarliestTimesForState: 907485
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 25 makes 8 geodes
+Time taken: 1.098856833s
+endNodes length: 19
+aborted: 725301
+nodesEvaluated: 2909671
+nodesByTime: map[1:1 2:1 3:1 4:3 5:5 6:8 7:19 8:40 9:85 10:198 11:410 12:797 13:1658 14:3735 15:8571 16:20395 17:47450 18:104884 19:155918 20:282365 21:556105 22:1088865 23:19 24:19]
+foundInEarliestTimesForState: 638119
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 26 makes 12 geodes
+Time taken: 8.445625ms
+endNodes length: 4
+aborted: 26947
+nodesEvaluated: 51739
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:166 13:317 14:623 15:1116 16:2189 17:4623 18:9867 19:3379 20:5252 21:7981 22:3981 23:4 24:4]
+foundInEarliestTimesForState: 12064
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 27 makes 3 geodes
+Time taken: 7.873417ms
+endNodes length: 0
+aborted: 35373
+nodesEvaluated: 51424
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:22 9:39 10:75 11:158 12:297 13:556 14:1043 15:1922 16:3844 17:8069 18:17166]
+foundInEarliestTimesForState: 18207
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 28 makes 0 geodes
+Time taken: 19.41825ms
+endNodes length: 6
+aborted: 42655
+nodesEvaluated: 99742
+nodesByTime: map[1:1 2:1 3:1 4:1 5:3 6:5 7:6 8:11 9:23 10:47 11:74 12:167 13:321 14:656 15:1338 16:2946 17:6808 18:15949 19:7094 20:10451 21:15230 22:17105 23:6 24:6]
+foundInEarliestTimesForState: 21492
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 29 makes 4 geodes
+Time taken: 10.068084ms
+endNodes length: 0
+aborted: 47045
+nodesEvaluated: 68455
+nodesByTime: map[1:1 2:1 3:1 4:2 5:4 6:6 7:11 8:23 9:54 10:112 11:249 12:507 13:973 14:1727 15:2955 16:5087 17:9697 18:19363]
+foundInEarliestTimesForState: 27682
+foundBetterInStatesAtTime: 0
+foundInBestStatesAtTime: 0
+######## Blue print 30 makes 0 geodes
+Part 1: 1319

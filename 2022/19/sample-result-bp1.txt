@@ -1,0 +1,65 @@
+Time taken: 2.199096833s
+endNodes length: 1080115
+aborted: 1838196
+nodesEvaluated: 4951613
+nodesByTime: map[1:1 2:1 3:2 4:3 5:7 6:12 7:27 8:48 9:103 10:206 11:426 12:858 13:1699 14:3488 15:7306 16:15999 17:36142 18:82968 19:102479 20:222634 21:530288 22:1119174 23:1718841 24:1108901]
+foundInEarliestTimesForState: 1440068
+distinctStatesSeen: 0
+distinctStatesSeenByTime: map[]
+== Minute 1 ==
+State: {ore:1 clay:0 obsidian:0 geode:0 oreRobot:1 clayRobot:0 obsidianRobot:0 geodeRobot:0}
+== Minute 2 ==
+State: {ore:2 clay:0 obsidian:0 geode:0 oreRobot:1 clayRobot:0 obsidianRobot:0 geodeRobot:0}
+== Minute 3 ==
+State: {ore:3 clay:0 obsidian:0 geode:0 oreRobot:1 clayRobot:0 obsidianRobot:0 geodeRobot:0}
+== Minute 4 ==
+Building Clay robot.
+State: {ore:2 clay:0 obsidian:0 geode:0 oreRobot:1 clayRobot:1 obsidianRobot:0 geodeRobot:0}
+== Minute 5 ==
+Building Clay robot.
+State: {ore:1 clay:1 obsidian:0 geode:0 oreRobot:1 clayRobot:2 obsidianRobot:0 geodeRobot:0}
+== Minute 6 ==
+State: {ore:2 clay:3 obsidian:0 geode:0 oreRobot:1 clayRobot:2 obsidianRobot:0 geodeRobot:0}
+== Minute 7 ==
+Building Clay robot.
+State: {ore:1 clay:5 obsidian:0 geode:0 oreRobot:1 clayRobot:3 obsidianRobot:0 geodeRobot:0}
+== Minute 8 ==
+State: {ore:2 clay:8 obsidian:0 geode:0 oreRobot:1 clayRobot:3 obsidianRobot:0 geodeRobot:0}
+== Minute 9 ==
+State: {ore:3 clay:11 obsidian:0 geode:0 oreRobot:1 clayRobot:3 obsidianRobot:0 geodeRobot:0}
+== Minute 10 ==
+State: {ore:4 clay:14 obsidian:0 geode:0 oreRobot:1 clayRobot:3 obsidianRobot:0 geodeRobot:0}
+== Minute 11 ==
+Building Obsidian robot.
+State: {ore:2 clay:3 obsidian:0 geode:0 oreRobot:1 clayRobot:3 obsidianRobot:1 geodeRobot:0}
+== Minute 12 ==
+Building Clay robot.
+State: {ore:1 clay:6 obsidian:1 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:1 geodeRobot:0}
+== Minute 13 ==
+State: {ore:2 clay:10 obsidian:2 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:1 geodeRobot:0}
+== Minute 14 ==
+State: {ore:3 clay:14 obsidian:3 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:1 geodeRobot:0}
+== Minute 15 ==
+Building Obsidian robot.
+State: {ore:1 clay:4 obsidian:4 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:0}
+== Minute 16 ==
+State: {ore:2 clay:8 obsidian:6 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:0}
+== Minute 17 ==
+State: {ore:3 clay:12 obsidian:8 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:0}
+== Minute 18 ==
+Building Geode robot.
+State: {ore:2 clay:16 obsidian:3 geode:0 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:1}
+== Minute 19 ==
+State: {ore:3 clay:20 obsidian:5 geode:1 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:1}
+== Minute 20 ==
+State: {ore:4 clay:24 obsidian:7 geode:2 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:1}
+== Minute 21 ==
+Building Geode robot.
+State: {ore:3 clay:28 obsidian:2 geode:3 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:2}
+== Minute 22 ==
+State: {ore:4 clay:32 obsidian:4 geode:5 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:2}
+== Minute 23 ==
+State: {ore:5 clay:36 obsidian:6 geode:7 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:2}
+== Minute 24 ==
+State: {ore:6 clay:40 obsidian:8 geode:9 oreRobot:1 clayRobot:4 obsidianRobot:2 geodeRobot:2}
+######## Blue print 1 makes 9 geodes
